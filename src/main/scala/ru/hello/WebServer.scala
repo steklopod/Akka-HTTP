@@ -17,8 +17,8 @@ import scala.io.StdIn
 object WebServer {
 
   case class Bid(userId: String, offer: Int)
-  case object GetBids
   case class Bids(bids: List[Bid])
+  case object GetBids
 
   class Auction extends Actor with ActorLogging {
     var bids = List.empty[Bid]
@@ -31,7 +31,6 @@ object WebServer {
     }
   }
 
-  // these are from spray-json
   implicit val bidFormat  = jsonFormat2(Bid)
   implicit val bidsFormat = jsonFormat1(Bids)
 
@@ -53,7 +52,6 @@ object WebServer {
         } ~
           get {
             implicit val timeout: Timeout = 5.seconds
-
             // запрос субъекта для текущего состояния аукциона
             val bids: Future[Bids] = (auction ? GetBids).mapTo[Bids]
             complete(bids)

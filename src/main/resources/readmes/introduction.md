@@ -345,7 +345,7 @@ object WebServer {
 ```
 
 При запуске этого сервера вы можете добавить ставку аукциона через терминал:
->curl -X PUT "http://localhost:8081/auction?bid=22&user=Martin"
+>curl -X PUT "http://localhost:8081/auction?bid=22&user=Dima"
  
 и тогда вы можете просмотреть статус аукциона либо в браузере, по url:
 >http://localhost:8081/auction
@@ -356,6 +356,95 @@ object WebServer {
 Дополнительные сведения о том, как работает маршалинг и демаршалинг JSON, можно найти в разделе [поддержка JSON](https://doc.akka.io/docs/akka-http/current/common/json-support.html).
 
 Подробнее о высокоуровневых API читайте в разделе [высокоуровневые серверные API (High-level Server-Side API)](https://doc.akka.io/docs/akka-http/current/routing-dsl/index.html).
+
+## Низкоуровневые API-интерфейсы HTTP-сервера
+Низкоуровневые API-интерфейсы сервера Akka позволяют обрабатывать соединения или отдельные запросы, принимая 
+[HttpRequest](http://doc.akka.io/api/akka-http/10.1.5/akka/http/scaladsl/model/HttpRequest.html) и отвечая на них, 
+создавая [HttpResponse](http://doc.akka.io/api/akka-http/10.1.5/akka/http/scaladsl/model/HttpResponse.html). Это 
+обеспечивается модулем `akka-http-core`. Доступны API-интерфейсы для обработки таких запросов-ответов, как вызовы 
+функций и как [Flow[HttpRequest, HttpResponse, _]](https://doc.akka.io/api/akka/2.5.12/akka/stream/scaladsl/Flow.html).
+
+```scala
+import akka.actor.ActorSystem
+import akka.http.scaladsl.Http
+import akka.http.scaladsl.model.HttpMethods._
+import akka.http.scaladsl.model._
+import akka.stream.ActorMaterializer
+import scala.io.StdIn
+
+object WebServer {
+
+  def main(args: Array[String]) {
+    implicit val system = ActorSystem()
+    implicit val materializer = ActorMaterializer()
+    implicit val executionContext = system.dispatcher
+
+    val requestHandler: HttpRequest => HttpResponse = {
+      case HttpRequest(GET, Uri.Path("/"), _, _, _) =>
+        HttpResponse(entity = HttpEntity(
+          ContentTypes.`text/html(UTF-8)`,
+          "<html><body>Hello world!</body></html>"))
+
+      case HttpRequest(GET, Uri.Path("/ping"), _, _, _) =>  HttpResponse(entity = "PONG!")
+      
+      case HttpRequest(GET, Uri.Path("/crash"), _, _, _) =>  sys.error("BOOM!")
+
+      case r: HttpRequest =>
+        r.discardEntityBytes() // important to drain incoming HTTP Entity stream
+        HttpResponse(404, entity = "Unknown resource!")
+    }
+
+ val bindingFuture = Http().bindAndHandle(route, "localhost", 8081)
+    println(s"Server online at http://localhost:8081/\nPress RETURN to stop...")
+    StdIn.readLine() // пусть он работает, пока пользователь не нажмет return
+    bindingFuture
+      .flatMap(_.unbind()) // триггер отвязки от порта
+      .onComplete(_ => system.terminate()) // и выключение когда сделанный
+  }
+}
+```
+## API-интерфейс HTTP-клиента
+API-интерфейсы клиента предоставляют методы для вызова HTTP-сервера с использованием тех же абстракций `HttpRequest` и 
+`HttpResponse`, которые использует HTTP-сервер Akka, но добавляет концепцию пулов соединений, позволяющих обрабатывать 
+несколько запросов на одном сервере более эффективно, повторно используя TCP-соединения с сервер.
+```scala
+import akka.actor.ActorSystem
+import akka.http.scaladsl.Http
+import akka.http.scaladsl.model._
+import akka.stream.ActorMaterializer
+
+import scala.concurrent.Future
+import scala.util.{Failure, Success}
+
+object Client extends App {
+  implicit val system           = ActorSystem()
+  implicit val materializer     = ActorMaterializer()
+  implicit val executionContext = system.dispatcher
+
+  val responseFuture: Future[HttpResponse] = Http().singleRequest(HttpRequest(uri = "http://akka.io"))
+
+  responseFuture
+    .onComplete {
+      case Success(res) => println(res)
+      case Failure(_)   => sys.error("something wrong")
+    }
+}
+```
+
+## Модули, составляющие Akka HTTP
+Akka HTTP структурирован в несколько модулей:
+
+### akka-http
+Высокоуровневая функциональность, такая как маршалинг, сжатие, а также мощный DSL для определения API на основе 
+HTTP на стороне сервера, это рекомендуемый способ написания HTTP-серверов с помощью Akka HTTP;
+### akka-http-core
+Полная, в основном низкоуровневая реализация HTTP (включая `WebSockets`) на уровне сервера и на стороне клиента;
+### akka-http-testkit
+Тестовый жгут проводов и набор утилит для проверки реализаций служб на стороне сервера;
+### akka-http-spray-json
+Предопределенный связующий код  для сериализации пользовательских типов из/в JSON с помощью `spray-json`;
+### akka-http-xml
+Предопределенный связующий код для сериализации пользовательских типов из/в XML с помощью `scala-xml`;
 
 
 [<= содержание](https://github.com/steklopod/Akka-HTTP/blob/master/readme.md)
