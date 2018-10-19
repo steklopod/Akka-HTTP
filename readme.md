@@ -9,6 +9,7 @@
 
 ### Содержание:
 1. [Введение](https://github.com/steklopod/Akka-HTTP/blob/master/src/main/resources/readmes/introduction.md)
+2. [Конфигурация](https://github.com/steklopod/Akka-HTTP/blob/master/src/main/resources/readmes/configuration.md)
 
 
 `Akka HTTP` следует довольно открытому дизайну и часто предлагает несколько API для решения одной и той же задачи. 
