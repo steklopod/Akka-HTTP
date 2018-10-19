@@ -11,6 +11,7 @@
 1. [Введение](https://github.com/steklopod/Akka-HTTP/blob/master/src/main/resources/readmes/introduction.md)
 2. [Конфигурация](https://github.com/steklopod/Akka-HTTP/blob/master/src/main/resources/readmes/configuration.md)
 3. [Типы данных и абстракции](https://github.com/steklopod/Akka-HTTP/blob/master/src/main/resources/readmes/data-types-and-abstractions.md)
+4. [Модель URI](https://github.com/steklopod/Akka-HTTP/blob/master/src/main/resources/readmes/uri-model.md)
 
 
 `Akka HTTP` следует довольно открытому дизайну и часто предлагает несколько API для решения одной и той же задачи. 

@@ -294,6 +294,12 @@ def credentialsOfRequest(req: HttpRequest): Option[User] =
 Пользователь может видеть, что соединение небезопасно, но принципиально нет способа узнать, должно ли соединение быть 
 безопасным. `HSTS` устраняет эту проблему, сообщая браузеру, что подключения к сайту всегда должны использовать `TLS/SSL`.
 
+См. также:
+* [пользовательский заголовок](https://doc.akka.io/docs/akka-http/current/common/http-model.html#custom-headers)
+* [Синтаксический Анализ / Рендеринг](https://doc.akka.io/docs/akka-http/current/common/http-model.html#parsing-rendering)
+* [Регистрация Пользовательских Типов Носителей](https://doc.akka.io/docs/akka-http/current/common/http-model.html#registering-custom-media-types)
+* [Регистрация Пользовательских Кодов Состояния](https://doc.akka.io/docs/akka-http/current/common/http-model.html#registering-custom-status-codes)
+* [Регистрация пользовательского метода HTTP](https://doc.akka.io/docs/akka-http/current/common/http-model.html#registering-custom-http-method)
 
 
 [<= содержание](https://github.com/steklopod/Akka-HTTP/blob/master/readme.md)
