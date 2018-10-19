@@ -8,7 +8,7 @@
 [akka-stream](https://github.com/steklopod/Akka-Streams). 
 
 ### Содержание:
-1. [Введение](https://github.com/steklopod/Akka-HTTP/tree/master/src/main/resources/readmes/concepts/introduction.md)
+1. [Введение](https://github.com/steklopod/Akka-HTTP/blob/master/src/main/resources/readmes/introduction.md)
 
 
 `Akka HTTP` следует довольно открытому дизайну и часто предлагает несколько API для решения одной и той же задачи. 
