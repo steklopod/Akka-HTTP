@@ -4,6 +4,7 @@ version := "0.1"
 
 scalaVersion := "2.12.6"
 val akkaVersion   = "2.5.17"
+val akkaHttp      = "10.1.5"
 val junitJupiter  = "5.2.0"
 val junitPlatform = "1.2.0"
 val slf4j         = "1.8.0-beta2"
@@ -34,6 +35,10 @@ libraryDependencies ++= Seq(
   "com.typesafe.akka"         %% "akka-stream"            % akkaVersion,
   "com.typesafe.akka"         %% "akka-testkit"           % akkaVersion % Test,
   "com.typesafe.akka"         %% "akka-stream-testkit"    % akkaVersion % Test,
+  "com.typesafe.akka"         %% "akka-http"              % akkaHttp,
+  "com.typesafe.akka"         %% "akka-http-testkit"      % akkaHttp,
+  "com.typesafe.akka"         %% "akka-http-spray-json"   % akkaHttp,
+  "io.spray"                  %% "spray-json"             % "1.3.4",
   "org.iq80.leveldb"          % "leveldb"                 % "0.10",
   "org.fusesource.leveldbjni" % "leveldbjni-all"          % "1.8"
 )

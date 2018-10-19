@@ -49,7 +49,7 @@ _Например, если вы создаете веб-приложение, �
 
 Кроме того, вы можете загрузить новый проект `sbt` с помощью HTTP-сервера Akka, уже настроенного с использованием шаблона [Giter8](http://www.foundweekends.org/giter8/):
 ```sbtshell
-sbt -Dsbt.version=0.13.15 new https://github.com/akka/akka-http-scala-seed.g8
+sbt new akka/akka-http-quickstart-scala.g8
 ```
 >Дополнительные инструкции можно найти в [проекте шаблона](https://github.com/akka/akka-http-scala-seed.g8).
 
@@ -97,9 +97,9 @@ object WebServer {
         }
       }
 
-    val bindingFuture = Http().bindAndHandle(route, "localhost", 8080)
+    val bindingFuture = Http().bindAndHandle(route, "localhost", 8081)
 
-    println(s"Server online at http://localhost:8080/\nPress RETURN to stop...")
+    println(s"Server online at http://localhost:8081/\nPress RETURN to stop...")
     StdIn.readLine()       // пусть он работает, пока пользователь не нажмет return
     bindingFuture
       .flatMap(_.unbind()) // триггер отвязки от порта
@@ -107,8 +107,9 @@ object WebServer {
   }
 }
 ```
-Когда вы запустите этот сервер, вы можете открыть страницу в браузере по следующему URL: `http://localhost:8080/hello` 
-или вызвать его в своем терминале через `curl http://localhost:8080/hello`.
+Когда вы запустите этот сервер, вы можете открыть страницу в браузере по следующему URL: `http://localhost:8081/hello` 
+или вызвать его в своем терминале через `curl http://localhost:8081/hello`.
+> Установка CURL для Windows: https://o7planning.org/ru/11617/installing-curl-on-windows
 
 Общим вариантом использования является ответ на запрос с использованием объекта модели, в котором маршаллер преобразует 
 его в JSON. В этом случае показаны два отдельных маршрута. Первый маршрут запрашивает асинхронную базу данных и выводит 
@@ -185,8 +186,8 @@ object WebServer {
           }
         }
 
-    val bindingFuture = Http().bindAndHandle(route, "localhost", 8080)
-    println(s"Server online at http://localhost:8080/\nPress RETURN to stop...")
+    val bindingFuture = Http().bindAndHandle(route, "localhost", 8081)
+    println(s"Server online at http://localhost:8081/\nPress RETURN to stop...")
     StdIn.readLine()       // пусть он работает, пока пользователь не нажмет return
     bindingFuture
       .flatMap(_.unbind()) // триггер отвязки от порта
@@ -196,13 +197,13 @@ object WebServer {
 ```
 
 Когда вы запустите этот сервер, вы можете обновить значение через:
->url -H "Content-Type: application/json" -X POST -d '{"items":[{"name":"hhgtg","id":42}]}' http://localhost:8080/create-order 
+>url -H "Content-Type: application/json" -X POST -d '{"items":[{"name":"hhgtg","id":42}]}' http://localhost:8081/create-order 
 
 или на вашем терминале-добавление элемента с именем `hhgtg` и имеющий `id=42`; а затем просмотреть инвентарь либо в браузере, по url: 
->http://localhost:8080/item/42
+>http://localhost:8081/item/42
 
 или на терминале
->curl http://localhost:8080/item/42
+>curl http://localhost:8081/item/42
 
 Логика для сортировки и разборки JSON в этом примере предоставляется библиотекой «spray-json» 
 
@@ -252,8 +253,8 @@ object WebServer {
         }
       }
 
-    val bindingFuture = Http().bindAndHandle(route, "localhost", 8080)
-    println(s"Server online at http://localhost:8080/\nPress RETURN to stop...")
+    val bindingFuture = Http().bindAndHandle(route, "localhost", 8081)
+    println(s"Server online at http://localhost:8081/\nPress RETURN to stop...")
     StdIn.readLine()       // пусть он работает, пока пользователь не нажмет return
     bindingFuture
       .flatMap(_.unbind()) // триггер отвязки от порта
@@ -265,22 +266,23 @@ object WebServer {
 Подключение к этой службе с помощью медленного HTTP-клиента приведет к обратному давлению, так что следующее случайное 
 число будет создаваться по требованию с постоянным использованием памяти на сервере. Это можно увидеть, используя 
 curl и ограничивая скорость:
- >curl --limit-rate 50b 127.0.0.1:8080/random
+ >curl --limit-rate 50b 127.0.0.1:8081/random
 
 Маршруты `Akka HTTP`  легко взаимодействует с акторами. В этом примере один маршрут позволяет размещать ставки в 
 стиле "огонь-и-забыть", а второй маршрут содержит взаимодействие "запрос-ответ" с субъектом. Полученный ответ 
 отображается в формате json и возвращается при получении ответа от субъекта.
 
 ```scala
-import akka.actor.{Actor, ActorSystem, Props, ActorLogging}
+import akka.actor.{Actor, ActorLogging, ActorSystem, Props}
 import akka.http.scaladsl.Http
+import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport._
 import akka.http.scaladsl.model.StatusCodes
 import akka.http.scaladsl.server.Directives._
-import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport._
 import akka.pattern.ask
 import akka.stream.ActorMaterializer
 import akka.util.Timeout
 import spray.json.DefaultJsonProtocol._
+
 import scala.concurrent.Future
 import scala.concurrent.duration._
 import scala.io.StdIn
@@ -298,17 +300,17 @@ object WebServer {
         bids = bids :+ bid
         log.info(s"Bid complete: $userId, $offer")
       case GetBids => sender() ! Bids(bids)
-      case _ => log.info("Invalid message")
+      case _       => log.info("Invalid message")
     }
   }
 
   // these are from spray-json
-  implicit val bidFormat = jsonFormat2(Bid)
+  implicit val bidFormat  = jsonFormat2(Bid)
   implicit val bidsFormat = jsonFormat1(Bids)
 
   def main(args: Array[String]) {
-    implicit val system = ActorSystem()
-    implicit val materializer = ActorMaterializer()
+    implicit val system           = ActorSystem()
+    implicit val materializer     = ActorMaterializer()
     implicit val executionContext = system.dispatcher
 
     val auction = system.actorOf(Props[Auction], "auction")
@@ -322,37 +324,39 @@ object WebServer {
             complete((StatusCodes.Accepted, "bid placed"))
           }
         } ~
-        get {
-          implicit val timeout: Timeout = 5.seconds
+          get {
+            implicit val timeout: Timeout = 5.seconds
 
-          // запрос субъекта для текущего состояния аукциона
-          val bids: Future[Bids] = (auction ? GetBids).mapTo[Bids]
-          complete(bids)
-        }
+            // запрос субъекта для текущего состояния аукциона
+            val bids: Future[Bids] = (auction ? GetBids).mapTo[Bids]
+            complete(bids)
+          }
       }
 
-    val bindingFuture = Http().bindAndHandle(route, "localhost", 8080)
-    println(s"Server online at http://localhost:8080/\nPress RETURN to stop...")
-    StdIn.readLine()       // пусть он работает, пока пользователь не нажмет return
+    val bindingFuture = Http().bindAndHandle(route, "localhost", 8081)
+    println(s"Server online at http://localhost:8081/\nPress RETURN to stop...")
+    StdIn.readLine() // пусть он работает, пока пользователь не нажмет return
     bindingFuture
       .flatMap(_.unbind()) // триггер отвязки от порта
       .onComplete(_ => system.terminate()) // и выключение когда сделанный
   }
 }
+
 ```
 
 При запуске этого сервера вы можете добавить ставку аукциона через терминал:
->curl -X PUT http://localhost:8080/auction?bid=22&user=MartinO 
+>curl -X PUT "http://localhost:8081/auction?bid=22&user=Martin"
  
 и тогда вы можете просмотреть статус аукциона либо в браузере, по url:
->http://localhost:8080/auction, 
+>http://localhost:8081/auction
 
 или, на терминале, через 
->curl http://localhost:8080/auction
+>curl http://localhost:8081/auction
 
 Дополнительные сведения о том, как работает маршалинг и демаршалинг JSON, можно найти в разделе [поддержка JSON](https://doc.akka.io/docs/akka-http/current/common/json-support.html).
 
 Подробнее о высокоуровневых API читайте в разделе [высокоуровневые серверные API (High-level Server-Side API)](https://doc.akka.io/docs/akka-http/current/routing-dsl/index.html).
+
 
 [<= содержание](https://github.com/steklopod/Akka-HTTP/blob/master/readme.md)
 _Если этот проект окажется полезным тебе - нажми на кнопочку **`★`** в правом верхнем углу._
