@@ -1,6 +1,6 @@
 name := "Akka HTTP"
 
-version := "0.1"
+version := "1.0"
 
 scalaVersion := "2.12.6"
 val akkaVersion   = "2.5.17"
@@ -41,7 +41,6 @@ libraryDependencies ++= Seq(
   "com.typesafe.akka"  %% "akka-http-testkit"      % akkaHttp % Test,
   "io.spray"           %% "spray-json"             % "1.3.4",
   "org.reactivemongo"  %% "reactivemongo"          % "0.16.0",
-//  "com.lightbend.akka" %% "akka-stream-alpakka-mongodb" % "1.0-M1"
 )
 
 resolvers ++= Seq(
