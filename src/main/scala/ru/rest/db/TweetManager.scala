@@ -1,11 +1,13 @@
 package ru.rest.db
 
+import reactivemongo.api.Cursor
 import reactivemongo.api.collections.bson.BSONCollection
-import reactivemongo.bson.BSONDocument
+import reactivemongo.bson.{BSONDocument, BSONObjectID}
 import ru.rest.models.TweetEntity
 
 import scala.concurrent.ExecutionContext.Implicits.global
 
+//http://reactivemongo.org/releases/0.1x/documentation/tutorial/find-documents.html
 object TweetManager {
   import MongoDB._
 
@@ -27,13 +29,17 @@ object TweetManager {
       .remove(queryById(id))
       .map(_ => Deleted)
 
+//  val projection = BSONDocument("author" -> 1)
+//  val query = BSONDocument("_id" -> BSONDocument("$gt" -> 1))
+
   def find =
     collection
       .find(emptyQuery)
-      .cursor[BSONDocument]
-      .collect[List]()
+//      .find(query, projection)
+      .cursor[TweetEntity]()
+      .collect[List]( 20, Cursor.FailOnError[List[TweetEntity]]())
 
-  private def queryById(id: String) = BSONDocument("_id" -> BSONObjectID(id))
+  private def queryById(id: String) = BSONDocument("_id" -> BSONObjectID(id.getBytes()))
 
   private def emptyQuery = BSONDocument()
 }
