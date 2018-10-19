@@ -61,6 +61,7 @@ scheme     authority       path        query   fragment
   urn:example:animal:ferret:nose
 ```
 
+[подробнее](https://doc.akka.io/docs/akka-http/current/common/uri-model.html)
 
 [<= содержание](https://github.com/steklopod/Akka-HTTP/blob/master/readme.md)
 
