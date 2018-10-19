@@ -41,7 +41,7 @@ libraryDependencies ++= Seq(
   "com.typesafe.akka"  %% "akka-http-testkit"      % akkaHttp % Test,
   "io.spray"           %% "spray-json"             % "1.3.4",
   "org.reactivemongo"  %% "reactivemongo"          % "0.16.0",
-  "com.lightbend.akka" %% "akka-stream-alpakka-mongodb" % "1.0-M1"
+//  "com.lightbend.akka" %% "akka-stream-alpakka-mongodb" % "1.0-M1"
 )
 
 resolvers ++= Seq(

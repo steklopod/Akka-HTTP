@@ -1,31 +1,37 @@
 package ru.rest.db
 
-import com.packt.akka.models._
-import reactivemongo.api.QueryOpts
-import reactivemongo.core.commands.Count
-
-import scala.concurrent.ExecutionContext
-import reactivemongo.bson.{BSONDocument, BSONObjectID}
 import reactivemongo.api.collections.bson.BSONCollection
+import reactivemongo.bson.BSONDocument
 import ru.rest.models.TweetEntity
+
+import scala.concurrent.ExecutionContext.Implicits.global
 
 object TweetManager {
   import MongoDB._
-  import ru.rest.models.TweetEntity._
 
-  val collection = db[BSONCollection]("tweets")
+  val collection = db2.collection[BSONCollection]("tweets")
+//  val collection = db2.map(_.collection("tweets"))
 
-  def save(tweetEntity: TweetEntity)(implicit ec: ExecutionContext) =
-    collection.insert(tweetEntity).map(_ => Created(tweetEntity.id.stringify))
+  def save(tweetEntity: TweetEntity) =
+    collection
+      .insert(tweetEntity)
+      .map(_ => Created(tweetEntity.id.stringify))
 
-  def findById(id: String)(implicit ec: ExecutionContext) =
-    collection.find(queryById(id)).one[TweetEntity]
+  def findById(id: String) =
+    collection
+      .find(queryById(id))
+      .one[TweetEntity]
 
-  def deleteById(id: String)(implicit ec: ExecutionContext) =
-    collection.remove(queryById(id)).map(_ => Deleted)
+  def deleteById(id: String) =
+    collection
+      .remove(queryById(id))
+      .map(_ => Deleted)
 
-  def find(implicit ec: ExecutionContext) =
-    collection.find(emptyQuery).cursor[BSONDocument].collect[List]()
+  def find =
+    collection
+      .find(emptyQuery)
+      .cursor[BSONDocument]
+      .collect[List]()
 
   private def queryById(id: String) = BSONDocument("_id" -> BSONObjectID(id))
 
