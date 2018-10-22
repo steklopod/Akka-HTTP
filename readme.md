@@ -11,11 +11,12 @@
 1. [Введение](https://github.com/steklopod/Akka-HTTP/blob/master/src/main/resources/readmes/introduction.md)
 2. [Конфигурация](https://github.com/steklopod/Akka-HTTP/blob/master/src/main/resources/readmes/configuration.md)
 3. [Типы данных и абстракции](https://github.com/steklopod/Akka-HTTP/blob/master/src/main/resources/readmes/data-types-and-abstractions.md)
-4. [Модель URI](https://github.com/steklopod/Akka-HTTP/blob/master/src/main/resources/readmes/uri-model.md)
-5. [Маршаллинг](https://github.com/steklopod/Akka-HTTP/blob/master/src/main/resources/readmes/marshalling.md)
-6. [АнМаршаллинг](https://github.com/steklopod/Akka-HTTP/blob/master/src/main/resources/readmes/unmarshalling.md)
-7. [Кодирование / Декодирование](https://github.com/steklopod/Akka-HTTP/blob/master/src/main/resources/readmes/encoding_decoding.md)
-8. [Кодирование / Декодирование](https://github.com/steklopod/Akka-HTTP/blob/master/src/main/resources/readmes/json-support.md)
+   * [Модель URI](https://github.com/steklopod/Akka-HTTP/blob/master/src/main/resources/readmes/uri-model.md)
+   * [Маршаллинг](https://github.com/steklopod/Akka-HTTP/blob/master/src/main/resources/readmes/marshalling.md)
+   * [АнМаршаллинг](https://github.com/steklopod/Akka-HTTP/blob/master/src/main/resources/readmes/unmarshalling.md)
+   * [Кодирование / Декодирование](https://github.com/steklopod/Akka-HTTP/blob/master/src/main/resources/readmes/encoding_decoding.md)
+   * [Поддержка JSON](https://github.com/steklopod/Akka-HTTP/blob/master/src/main/resources/readmes/json-support.md)
+4. [Серверное API](https://github.com/steklopod/Akka-HTTP/blob/master/src/main/resources/readmes/server_api.md)
 
 
 `Akka HTTP` следует довольно открытому дизайну и часто предлагает несколько API для решения одной и той же задачи. 
