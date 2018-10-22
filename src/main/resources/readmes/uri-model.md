@@ -287,9 +287,6 @@ the[IllegalUriException] thrownBy relaxed("a%b=c") shouldBe {
 }
 ```
 
-
-[подробнее](https://doc.akka.io/docs/akka-http/current/common/uri-model.html)
-
 [<= содержание](https://github.com/steklopod/Akka-HTTP/blob/master/readme.md)
 
 _Если этот проект окажется полезным тебе - нажми на кнопочку **`★`** в правом верхнем углу._
