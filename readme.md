@@ -15,6 +15,7 @@
 5. [Маршаллинг](https://github.com/steklopod/Akka-HTTP/blob/master/src/main/resources/readmes/marshalling.md)
 6. [АнМаршаллинг](https://github.com/steklopod/Akka-HTTP/blob/master/src/main/resources/readmes/unmarshalling.md)
 7. [Кодирование / Декодирование](https://github.com/steklopod/Akka-HTTP/blob/master/src/main/resources/readmes/encoding_decoding.md)
+8. [Кодирование / Декодирование](https://github.com/steklopod/Akka-HTTP/blob/master/src/main/resources/readmes/json-support.md)
 
 
 `Akka HTTP` следует довольно открытому дизайну и часто предлагает несколько API для решения одной и той же задачи. 
